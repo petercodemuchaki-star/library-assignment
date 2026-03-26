@@ -1,1 +1,149 @@
+#include <iostream>
+using namespace std;
+
+//CLASS STUDENT CREATED
+class Student {
+private:
+    string name;
+    int admissionNo;
+    int marks[3];
+    int total;
+    float average;
+
+    //TEACHER ENTERS MARKS OF THE STUDENT
+    void inputMarks() {
+        cout << "\n--- Teacher: Enter Marks ---\n";
+        for(int i = 0; i < 3; i++) {
+            cout << "Subject " << i + 1 << ": ";
+            cin >> marks[i];
+
+            if(marks[i] < 0 || marks[i] > 100) {
+                cout << "Invalid! Set to 0\n";
+                marks[i] = 0;
+            }
+        }
+    }
+
+public:
+    Student() {
+        total = 0;
+        average = 0;
+    }
+
+    void inputDetails() {
+        cout << "Enter Name: ";
+        cin >> name;
+        cout << "Enter Admission No: ";
+        cin >> admissionNo;
+    }
+
+    void teacherEnterResults() {
+        inputMarks();
+        calculateResults();
+    }
+
+    void calculateResults() {
+        total = 0;
+        for(int i = 0; i < 3; i++) {
+            total += marks[i];
+        }
+        average = total / 3.0;
+    }
+
+    void displayReport() {
+        cout << "\nSTUDENT REPORT\n";
+        cout << "Name: " << name << endl;
+        cout << "Admission No: " << admissionNo << endl;
+
+        for(int i = 0; i < 3; i++) {
+            cout << "Subject " << i + 1 << ": " << marks[i] << endl;
+        }
+
+        cout << "Total: " << total << endl;
+        cout << "Average: " << average << endl;
+
+        if(average >= 70)
+            cout << "Grade: A\n";
+        else if(average >= 50)
+            cout << "Grade: B\n";
+        else
+            cout << "Grade: C\n";
+    }
+};
+
+// MAIN 
+int main() {
+    Student students[5];
+    int count = 0;
+    int choice;
+
+    const int EMPLOYER_ID = 1234; // Sample teacher ID
+
+    do {
+        cout << "\n School Assessment Report System \n";
+        cout << "1. Add Student\n";
+        cout << "2. Enter Results (Teacher Only)\n";
+        cout << "3. View Report (Parent)\n";
+        cout << "4. Exit\n";
+        cout << "Choice: ";
+        cin >> choice;
+
+        switch(choice) {
+//case one inputs upto 5 students
+        case 1:
+            if(count < 5) {
+                students[count].inputDetails();
+                count++;
+            } else {
+                cout << "Student list full!\n";
+            }
+            break;
+
+        case 2: {
+            int id;
+            cout << "Enter Employer ID: ";
+            cin >> id;
+
+            // Security check only teacher can access using id
+            if(id == EMPLOYER_ID) {
+                int index;
+                cout << "Enter student index (0-" << count-1 << "): ";
+                cin >> index;
+
+                if(index >=0 && index < count) {
+                    students[index].teacherEnterResults();
+                } else {
+                    cout << "Invalid index!\n";
+                }
+            } else {
+                cout << "Access Denied! Wrong Employer ID.\n";
+            }
+            break;
+        }
+
+        case 3: {
+            int index;
+            cout << "Enter student index (0-" << count-1 << "): ";
+            cin >> index;
+
+            if(index >= 0 && index < count) {
+                students[index].displayReport();
+            } else {
+                cout << "Invalid index!\n";
+            }
+            break;
+        }
+
+        case 4:
+            cout << "Exiting...\n";
+            break;
+
+        default:
+            cout << "Invalid choice!\n";
+        }
+
+    } while(choice != 4);
+
+    return 0;
+}
 
